@@ -40,7 +40,7 @@ class _DetailProductState extends State<DetailProduct> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: const Color(0xFF67C4A7),
+        backgroundColor: const Color(0xFF016A63),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
@@ -217,10 +217,10 @@ class _DetailProductState extends State<DetailProduct> {
                       },
                       style: ElevatedButton.styleFrom(
                         minimumSize: const Size(120, 48), // Ukuran fleksibel
-                        backgroundColor: const Color(0xFF67C4A7),
+                        backgroundColor: const Color(0xFF016A63),
                       ),
                       child: const Text(
-                        'Masukkan ke keranjang',
+                        'Keranjang',
                         style: TextStyle(color: Colors.white),
                       ),
                     ),

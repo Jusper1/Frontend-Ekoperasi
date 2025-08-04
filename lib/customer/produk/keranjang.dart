@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:ekoperasi/customer/produk/pembayaran.dart';
 import 'package:ekoperasi/service/auth_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:ekoperasi/customer/homepage.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
@@ -91,24 +92,33 @@ class _CartPageState extends State<CartPage> {
     });
   }
 
-  void navigateToPaymentPage() {
+  void navigateToPaymentPage() async {
     List<CartItem> selectedItems = [];
 
     for (int index in checkedItems) {
-      selectedItems.add(cartItems[index]); // Menggunakan CartItem
+      selectedItems.add(cartItems[index]);
     }
 
     double totalPrice = calculateTotalPrice();
 
-    Navigator.push(
+    final result = await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => PembayaranPage(
-          cartItems: selectedItems, // Mengirimkan item yang dipilih
+          cartItems: selectedItems,
           totalPrice: totalPrice,
         ),
       ),
     );
+
+    if (result == true) {
+      // Hapus item yang dibayar dari keranjang
+      setState(() {
+        cartItems.removeWhere((item) => selectedItems.contains(item));
+        checkedItems.clear();
+      });
+      await saveCartItems();
+    }
   }
 
   @override
@@ -124,12 +134,24 @@ class _CartPageState extends State<CartPage> {
 
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const HomePage(userName: 'NamaUser'),
+              ),
+              (route) => false,
+            );
+          },
+        ),
         title: const Text('Keranjang Saya',
             style: TextStyle(
                 color: Colors.black,
                 fontSize: 18,
                 fontWeight: FontWeight.normal)),
-        backgroundColor: const Color(0xFF67C4A7),
+        backgroundColor: const Color(0xFF016A63),
         iconTheme: const IconThemeData(color: Colors.black),
         elevation: 0,
       ),
@@ -222,7 +244,7 @@ class _CartPageState extends State<CartPage> {
               },
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 16),
-                backgroundColor: const Color(0xFF67C4A7),
+                backgroundColor: const Color(0xFF016A63),
                 minimumSize: const Size.fromHeight(50),
                 shape: RoundedRectangleBorder(
                   borderRadius:

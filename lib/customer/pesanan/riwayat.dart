@@ -1,5 +1,6 @@
 // ignore_for_file: avoid_print, use_super_parameters, use_build_context_synchronously
 
+import 'package:ekoperasi/customer/homepage.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -229,9 +230,21 @@ class _RiwayatPageState extends State<RiwayatPage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const HomePage(userName: 'NamaUser'),
+              ),
+              (route) => false,
+            );
+          },
+        ),
         title: const Text('Riwayat Pesanan',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.normal)),
-        backgroundColor: const Color(0xFF67C4A7),
+        backgroundColor: const Color(0xFF016A63),
       ),
       body: isLoadingOrders
           ? const Center(child: CircularProgressIndicator())
@@ -435,7 +448,7 @@ class OrderDetailPage extends StatelessWidget {
           'Detail Pesanan',
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.normal),
         ),
-        backgroundColor: const Color(0xFF67C4A7),
+        backgroundColor: const Color(0xFF016A63),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),

@@ -1,5 +1,3 @@
-// ignore_for_file: non_constant_identifier_names, avoid_print
-
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -9,13 +7,11 @@ import 'package:ekoperasi/customer/produk/detailproduk.dart';
 import 'package:ekoperasi/customer/produk/keranjang.dart';
 import 'package:ekoperasi/service/auth_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart' as http;
 
 class HomePage extends StatefulWidget {
   final String userName;
 
-  // ignore: use_super_parameters
   const HomePage({Key? key, required this.userName}) : super(key: key);
 
   @override
@@ -317,7 +313,7 @@ class _HomePageState extends State<HomePage> {
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: const Color(0xFF67C4A7),
+        backgroundColor: const Color(0xFF016A63),
         title: const Text(
           "E-Koperasi",
           style: TextStyle(
@@ -413,116 +409,116 @@ class _HomePageState extends State<HomePage> {
                       //   ),
                       // ),
                       // const SizedBox(height: 20),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                        child: Container(
-                          width: double.infinity, // Membuat lebar penuh
-                          height: 110, // Mengubah tinggi menjadi 110
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            gradient: LinearGradient(
-                              colors: [
-                                const Color(0xFF67C4A7).withOpacity(0.8),
-                                const Color(0xFF8BC34A).withOpacity(0.8),
-                              ],
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                            ),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const Padding(
-                                      padding:
-                                          EdgeInsets.fromLTRB(16, 10, 16, 0),
-                                      child: Text(
-                                        'Kirim bukti pembayaran kamu',
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.black,
-                                        ),
-                                        textAlign: TextAlign.left,
-                                      ),
-                                    ),
-                                    const Padding(
-                                      padding:
-                                          EdgeInsets.fromLTRB(16, 0, 16, 0),
-                                      child: Text(
-                                        'Jln. Dr.Moh Hatta, Binuang Kp.Dalam',
-                                        style: TextStyle(
-                                          fontSize: 11,
-                                          fontWeight: FontWeight.normal,
-                                          color: Colors.black,
-                                        ),
-                                        textAlign: TextAlign.left,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 4),
-                                    Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          16, 8, 16, 10),
-                                      child: ElevatedButton(
-                                        onPressed: () {
-                                          if (name != null &&
-                                              orders.isNotEmpty) {
-                                            // Ambil order_id dan total_price dari pesanan pertama (atau sesuaikan dengan order yang diinginkan)
-                                            String orderId = orders[0]
-                                                    ['order_id']
-                                                .toString(); // Ganti index jika perlu
-                                            String totalPrice = orders[0]
-                                                    ['total_price']
-                                                .toString(); // Ganti sesuai dengan struktur data Anda
+                      // Padding(
+                      //   padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      //   child: Container(
+                      //     width: double.infinity, // Membuat lebar penuh
+                      //     height: 110, // Mengubah tinggi menjadi 110
+                      //     decoration: BoxDecoration(
+                      //       borderRadius: BorderRadius.circular(10),
+                      //       gradient: LinearGradient(
+                      //         colors: [
+                      //           const Color(0xFF67C4A7).withOpacity(0.8),
+                      //           const Color(0xFF8BC34A).withOpacity(0.8),
+                      //         ],
+                      //         begin: Alignment.topLeft,
+                      //         end: Alignment.bottomRight,
+                      //       ),
+                      //     ),
+                      //     child: Row(
+                      //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //       children: [
+                      //         Expanded(
+                      //           child: Column(
+                      //             mainAxisAlignment: MainAxisAlignment.center,
+                      //             crossAxisAlignment: CrossAxisAlignment.start,
+                      //             children: [
+                      //               const Padding(
+                      //                 padding:
+                      //                     EdgeInsets.fromLTRB(16, 10, 16, 0),
+                      //                 child: Text(
+                      //                   'Hubungi Kami Jika Ada kendala',
+                      //                   style: TextStyle(
+                      //                     fontSize: 14,
+                      //                     fontWeight: FontWeight.bold,
+                      //                     color: Colors.black,
+                      //                   ),
+                      //                   textAlign: TextAlign.left,
+                      //                 ),
+                      //               ),
+                      //               const Padding(
+                      //                 padding:
+                      //                     EdgeInsets.fromLTRB(16, 0, 16, 0),
+                      //                 child: Text(
+                      //                   'Jl. Adinegoro, Birugo, Kec. Aur Birugo Tigo Baleh, Kota Bukittinggi, Sumatera Barat 26181',
+                      //                   style: TextStyle(
+                      //                     fontSize: 11,
+                      //                     fontWeight: FontWeight.normal,
+                      //                     color: Colors.black,
+                      //                   ),
+                      //                   textAlign: TextAlign.left,
+                      //                 ),
+                      //               ),
+                      //               const SizedBox(height: 4),
+                      //               Padding(
+                      //                 padding: const EdgeInsets.fromLTRB(
+                      //                     16, 8, 16, 10),
+                      //                 child: ElevatedButton(
+                      //                   onPressed: () {
+                      //                     if (name != null &&
+                      //                         orders.isNotEmpty) {
+                      //                       // Ambil order_id dan total_price dari pesanan pertama (atau sesuaikan dengan order yang diinginkan)
+                      //                       String orderId = orders[0]
+                      //                               ['order_id']
+                      //                           .toString(); // Ganti index jika perlu
+                      //                       String totalPrice = orders[0]
+                      //                               ['total_price']
+                      //                           .toString(); // Ganti sesuai dengan struktur data Anda
 
-                                            // Membuat pesan WhatsApp
-                                            String message = Uri.encodeComponent(
-                                                "Halo! Saya ${name!}, pelanggan Anda. Saya ingin mengirimkan bukti pembayaran untuk pesanan saya. Berikut adalah detail pesanan saya:\n\n"
-                                                "Order ID     : $orderId\n"
-                                                "Total Harga  : Rp $totalPrice\n\n"
-                                                "Mohon bantuannya untuk proses lebih lanjut. Terima kasih banyak!");
+                      //                       // Membuat pesan WhatsApp
+                      //                       String message = Uri.encodeComponent(
+                      //                           "Halo! Saya ${name!}, pelanggan Anda. Saya ingin mengirimkan bukti pembayaran untuk pesanan saya. Berikut adalah detail pesanan saya:\n\n"
+                      //                           "Order ID     : $orderId\n"
+                      //                           "Total Harga  : Rp $totalPrice\n\n"
+                      //                           "Mohon bantuannya untuk proses lebih lanjut. Terima kasih banyak!");
 
-                                            // URL WhatsApp dengan pesan yang sudah disiapkan
-                                            String url =
-                                                "https://wa.me/6281372114967?text=$message"; // Ganti nomor WhatsApp sesuai kebutuhan
+                      //                       // URL WhatsApp dengan pesan yang sudah disiapkan
+                      //                       String url =
+                      //                           "https://wa.me/6281372114967?text=$message"; // Ganti nomor WhatsApp sesuai kebutuhan
 
-                                            // Ignore deprecated warning for launch (pastikan Anda sudah menggunakan package yang sesuai)
-                                            // ignore: deprecated_member_use
-                                            launch(url);
-                                          }
-                                        },
-                                        // ignore: sort_child_properties_last
-                                        child: const Text(
-                                          'Hubungi Sekarang',
-                                          style: TextStyle(color: Colors.white),
-                                        ),
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor:
-                                              const Color(0xFF2A7C5B),
-                                          elevation: 0,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(right: 16),
-                                child: Image.asset(
-                                  './lib/assets/ilustrasi.png',
-                                  height: 70,
-                                  width: 70,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
+                      //                       // Ignore deprecated warning for launch (pastikan Anda sudah menggunakan package yang sesuai)
+                      //                       // ignore: deprecated_member_use
+                      //                       launch(url);
+                      //                     }
+                      //                   },
+                      //                   // ignore: sort_child_properties_last
+                      //                   child: const Text(
+                      //                     'Hubungi Sekarang',
+                      //                     style: TextStyle(color: Colors.white),
+                      //                   ),
+                      //                   style: ElevatedButton.styleFrom(
+                      //                     backgroundColor:
+                      //                         const Color(0xFF2A7C5B),
+                      //                     elevation: 0,
+                      //                   ),
+                      //                 ),
+                      //               ),
+                      //             ],
+                      //           ),
+                      //         ),
+                      //         Padding(
+                      //           padding: const EdgeInsets.only(right: 16),
+                      //           child: Image.asset(
+                      //             './lib/assets/ilustrasi.png',
+                      //             height: 70,
+                      //             width: 70,
+                      //             fit: BoxFit.cover,
+                      //           ),
+                      //         ),
+                      //       ],
+                      //     ),
+                      //   ),
+                      // ),
 
                       const SizedBox(height: 20),
                       const Padding(

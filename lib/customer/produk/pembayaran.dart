@@ -28,7 +28,7 @@ class PembayaranPage extends StatefulWidget {
 
 class _PembayaranPageState extends State<PembayaranPage> {
   final formatter = NumberFormat('#,###', 'id_ID');
-  String selectedPaymentMethod = 'Bank Transfer';
+  String selectedPaymentMethod = 'Credit';
   String selectedDeliveryMethod = 'Diantar';
   TextEditingController addressController = TextEditingController();
 
@@ -120,8 +120,27 @@ class _PembayaranPageState extends State<PembayaranPage> {
     }
   }
 
-  void _showSuccessSnackbar() {
-    // ignore: prefer_const_declarations
+  Future<void> clearPaidItemsFromCart(List<CartItem> paidItems) async {
+    final prefs = await SharedPreferences.getInstance();
+    final String? cartData = prefs.getString('cartItems');
+
+    if (cartData != null) {
+      List<dynamic> jsonList = jsonDecode(cartData);
+      List<CartItem> currentItems =
+          jsonList.map((e) => CartItem.fromJson(e)).toList();
+
+      // Hapus item yang sudah dibayar
+      currentItems
+          .removeWhere((item) => paidItems.any((paid) => paid.id == item.id));
+
+      // Simpan kembali ke SharedPreferences
+      final String updatedCart =
+          jsonEncode(currentItems.map((e) => e.toJson()).toList());
+      await prefs.setString('cartItems', updatedCart);
+    }
+  }
+
+  void _showSuccessSnackbar() async {
     final snackBar = const SnackBar(
       content: Text('Pesanan Anda sedang diproses!'),
       backgroundColor: Colors.green,
@@ -130,11 +149,15 @@ class _PembayaranPageState extends State<PembayaranPage> {
 
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
 
-    // Navigasi ke CartPage setelah snackbar ditampilkan
+    // Hapus item dari SharedPreferences langsung dari sini
+    await clearPaidItemsFromCart(widget.cartItems);
+
+    // Navigasi ke RiwayatPage setelah snackbar selesai
     Future.delayed(const Duration(seconds: 2), () {
-      Navigator.pushReplacement(
+      Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (context) => const RiwayatPage()),
+        (Route<dynamic> route) => false,
       );
     });
   }
@@ -176,7 +199,7 @@ class _PembayaranPageState extends State<PembayaranPage> {
                 color: Colors.black,
                 fontSize: 18,
                 fontWeight: FontWeight.normal)),
-        backgroundColor: const Color(0xFF67C4A7),
+        backgroundColor: const Color(0xFF016A63),
         iconTheme: const IconThemeData(color: Colors.black),
         elevation: 0,
       ),
@@ -207,8 +230,8 @@ class _PembayaranPageState extends State<PembayaranPage> {
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             RadioListTile(
-              title: const Text('Bank Transfer'),
-              value: 'Bank Transfer',
+              title: const Text('Credit'),
+              value: 'Credit',
               groupValue: selectedPaymentMethod,
               onChanged: (value) =>
                   setState(() => selectedPaymentMethod = value.toString()),
@@ -221,12 +244,7 @@ class _PembayaranPageState extends State<PembayaranPage> {
                   setState(() => selectedPaymentMethod = value.toString()),
             ),
             const SizedBox(height: 20),
-            if (selectedPaymentMethod == 'Bank Transfer')
-              const Text(
-                'Nomor Rekening: 123-456-7890 (Basmida Laia)',
-                style: TextStyle(fontSize: 14, color: Colors.black54),
-              ),
-            const SizedBox(height: 20),
+            if (selectedPaymentMethod == 'Credit') const SizedBox(height: 20),
             const Text('Pilih Metode Pengiriman',
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
             RadioListTile(
@@ -264,7 +282,7 @@ class _PembayaranPageState extends State<PembayaranPage> {
               onPressed:
                   _showConfirmationDialog, // Menampilkan dialog konfirmasi
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF67C4A7),
+                backgroundColor: const Color(0xFF016A63),
                 minimumSize: const Size(double.infinity, 56),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8.0),

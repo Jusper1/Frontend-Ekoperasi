@@ -118,7 +118,7 @@ class _LoginPageState extends State<LoginPage> {
                   style: TextStyle(
                     fontSize: 30,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xFF2A7C5B),
+                    color: Color(0xFF016A63),
                   ),
                 ),
               ),
@@ -128,7 +128,7 @@ class _LoginPageState extends State<LoginPage> {
                   style: TextStyle(
                     fontSize: 30,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xFF2A7C5B),
+                    color: Color(0xFF016A63),
                   ),
                 ),
               ),
@@ -230,7 +230,7 @@ class _LoginPageState extends State<LoginPage> {
                     ? const CircularProgressIndicator()
                     : ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF2A7C5B),
+                          backgroundColor: const Color(0xFF016A63),
                           minimumSize: const Size(double.infinity, 50),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
@@ -268,7 +268,7 @@ class _LoginPageState extends State<LoginPage> {
                         TextSpan(
                           text: 'Register',
                           style: TextStyle(
-                            color: Color(0xFF2A7C5B),
+                            color: Color(0xFF016A63),
                           ),
                         ),
                       ],

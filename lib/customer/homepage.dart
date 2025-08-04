@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:ekoperasi/customer/credit/CreditListPage.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:ekoperasi/customer/akun/akuncustomer.dart';
@@ -185,6 +186,12 @@ class _HomePageState extends State<HomePage> {
         );
         break;
       case 3:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const CreditListPage()),
+        );
+        break;
+      case 4:
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => AccountPage()),
@@ -568,6 +575,8 @@ class _HomePageState extends State<HomePage> {
           BottomNavigationBarItem(
               icon: Icon(Icons.shopping_cart), label: 'Keranjang'),
           BottomNavigationBarItem(icon: Icon(Icons.history), label: 'Riwayat'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.credit_card), label: 'Credit'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Akun'),
         ],
       ),

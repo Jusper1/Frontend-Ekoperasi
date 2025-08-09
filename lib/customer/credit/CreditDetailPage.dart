@@ -61,18 +61,35 @@ class _CreditDetailPageState extends State<CreditDetailPage> {
     }
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Detail Kredit")),
+      appBar: AppBar(
+        title: const Text("Detail Kredit"),
+        backgroundColor: const Color(0xFF016A63),
+        foregroundColor: Colors.white,
+        elevation: 0,
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Total Kredit : Rp ${credit!['total_credit']}"),
-            Text("Sisa Kredit  : Rp ${credit!['credit_remaining']}"),
-            Text("Status       : ${credit!['status']}"),
+            Text("Detail Kredit",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF016A63),
+                )),
+            const SizedBox(height: 12),
+            _buildDetailRow("Total Kredit", "Rp ${credit!['total_credit']}"),
+            _buildDetailRow("Sisa Kredit", "Rp ${credit!['credit_remaining']}"),
+            _buildDetailRow("Status", getStatusLabel(credit!['status'])),
             const SizedBox(height: 20),
-            const Text("Riwayat Pembayaran:",
-                style: TextStyle(fontWeight: FontWeight.bold)),
+            Text(
+              "Riwayat Pembayaran",
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                  color: Color(0xFF016A63)),
+            ),
             const SizedBox(height: 8),
             Expanded(
               child: payments.isEmpty
@@ -81,22 +98,68 @@ class _CreditDetailPageState extends State<CreditDetailPage> {
                       itemCount: payments.length,
                       itemBuilder: (context, index) {
                         final p = payments[index];
-                        return ListTile(
-                          title: Text("Rp ${p['amount']}"),
-                          subtitle: Text(p['paid_at']),
-                          trailing: Text(p['note'] ?? '-'),
+                        return Card(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12)),
+                          elevation: 2,
+                          margin: const EdgeInsets.symmetric(vertical: 6),
+                          child: ListTile(
+                            contentPadding: const EdgeInsets.symmetric(
+                                vertical: 10, horizontal: 16),
+                            title: Text("Rp ${p['amount']}",
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold)),
+                            subtitle: Text("Tanggal: ${p['paid_at']}"),
+                            trailing: Text(p['note'] ?? '-'),
+                          ),
                         );
                       },
                     ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 12),
             const Text(
               "* Pembayaran kredit dilakukan langsung kepada admin.",
-              style: TextStyle(color: Colors.red, fontStyle: FontStyle.italic),
+              style: TextStyle(
+                color: Colors.red,
+                fontStyle: FontStyle.italic,
+                fontSize: 12,
+              ),
             ),
           ],
         ),
       ),
     );
+  }
+
+  Widget _buildDetailRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(label,
+              style:
+                  const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+          Text(value,
+              style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF016A63))),
+        ],
+      ),
+    );
+  }
+
+  String getStatusLabel(String status) {
+    switch (status.toLowerCase()) {
+      case 'active':
+        return 'Aktif';
+      case 'paid':
+        return 'Lunas';
+      case 'overdue':
+        return 'Terlambat';
+      default:
+        return status;
+    }
   }
 }

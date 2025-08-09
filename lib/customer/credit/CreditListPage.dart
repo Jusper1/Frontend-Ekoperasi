@@ -1,4 +1,5 @@
 import 'package:ekoperasi/customer/credit/CreditDetailPage.dart';
+import 'package:ekoperasi/customer/homepage.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -59,47 +60,107 @@ class _CreditListPageState extends State<CreditListPage> {
     });
   }
 
+  String getStatusLabel(String status) {
+    switch (status.toLowerCase()) {
+      case 'active':
+        return 'Aktif';
+      case 'paid':
+        return 'Lunas';
+      case 'overdue':
+        return 'Terlambat';
+      default:
+        return status;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Kredit Saya')),
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const HomePage(userName: 'NamaUser'),
+              ),
+              (route) => false,
+            );
+          },
+        ),
+        title: const Text('Kredit Saya'),
+        backgroundColor: const Color(0xFF016A63),
+        foregroundColor: Colors.white,
+        elevation: 0,
+      ),
       body: _creditFuture == null
           ? const Center(child: CircularProgressIndicator())
           : FutureBuilder<List<dynamic>>(
               future: _creditFuture,
               builder: (context, snapshot) {
-                print('FutureBuilder status: ${snapshot.connectionState}');
                 if (snapshot.hasData) {
                   final credits = snapshot.data!;
-                  print('Jumlah kredit ditemukan: ${credits.length}');
                   if (credits.isEmpty) {
-                    return const Center(child: Text('Tidak ada kredit.'));
+                    return const Center(
+                      child: Text(
+                        'Tidak ada kredit.',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    );
                   }
 
                   return ListView.builder(
+                    padding: const EdgeInsets.all(12),
                     itemCount: credits.length,
                     itemBuilder: (context, index) {
                       final credit = credits[index];
-                      return ListTile(
-                        title: Text("Total: Rp ${credit['total_credit']}"),
-                        subtitle:
-                            Text("Sisa: Rp ${credit['credit_remaining']}"),
-                        trailing: Text(credit['status']),
-                        onTap: () {
-                          print('Klik kredit ID: ${credit['id']}');
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) =>
-                                  CreditDetailPage(creditId: credit['id']),
+                      return Card(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12)),
+                        elevation: 3,
+                        margin: const EdgeInsets.symmetric(vertical: 8),
+                        child: ListTile(
+                          contentPadding: const EdgeInsets.symmetric(
+                              vertical: 10, horizontal: 16),
+                          title: Text(
+                            "Total: Rp ${credit['total_credit']}",
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 16),
+                          ),
+                          subtitle: Text(
+                            "Sisa: Rp ${credit['credit_remaining']}",
+                            style: const TextStyle(fontSize: 14),
+                          ),
+                          trailing: Container(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 4, horizontal: 8),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF016A63).withOpacity(0.1),
+                              border: Border.all(
+                                  color: const Color(0xFF016A63), width: 1),
+                              borderRadius: BorderRadius.circular(8),
                             ),
-                          );
-                        },
+                            child: Text(
+                              getStatusLabel(credit['status']),
+                              style: const TextStyle(
+                                  fontSize: 12, color: Color(0xFF016A63)),
+                            ),
+                          ),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) =>
+                                    CreditDetailPage(creditId: credit['id']),
+                              ),
+                            );
+                          },
+                        ),
                       );
                     },
                   );
                 } else if (snapshot.hasError) {
-                  print('Terjadi error di FutureBuilder: ${snapshot.error}');
                   return Center(child: Text("Error: ${snapshot.error}"));
                 }
 

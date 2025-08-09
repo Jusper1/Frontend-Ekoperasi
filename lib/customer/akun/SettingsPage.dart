@@ -6,9 +6,16 @@ import 'package:http/http.dart' as http;
 class SettingsPage extends StatefulWidget {
   final String name;
   final String email;
+  final String noHp;
+  final String alamat;
 
-  const SettingsPage({Key? key, required this.name, required this.email})
-      : super(key: key);
+  const SettingsPage({
+    Key? key,
+    required this.name,
+    required this.email,
+    required this.noHp,
+    required this.alamat,
+  }) : super(key: key);
 
   @override
   _SettingsPageState createState() => _SettingsPageState();
@@ -27,21 +34,26 @@ class _SettingsPageState extends State<SettingsPage> {
     _loadInitialData();
   }
 
-  Future<void> _loadInitialData() async {
+  void _loadInitialData() {
     _nameController.text = widget.name;
     _emailController.text = widget.email;
-
-    final prefs = await SharedPreferences.getInstance();
-    _noHpController.text = prefs.getString('user_no_hp') ?? '';
-    _alamatController.text = prefs.getString('user_alamat') ?? '';
+    _noHpController.text = widget.noHp;
+    _alamatController.text = widget.alamat;
   }
 
   Future<void> _saveChanges() async {
     final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString('token');
+    final token = prefs.getString('access_token'); // gunakan key yang benar
+
+    if (token == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Token tidak ditemukan")),
+      );
+      return;
+    }
 
     final response = await http.put(
-      Uri.parse('http://192.168.43.202:8000/api/update-profile'),
+      Uri.parse('http://192.168.43.202:8000/api/profile/update'),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $token',
@@ -57,17 +69,22 @@ class _SettingsPageState extends State<SettingsPage> {
     );
 
     if (response.statusCode == 200) {
+      // Simpan ke SharedPreferences
       await prefs.setString('user_name', _nameController.text);
       await prefs.setString('user_email', _emailController.text);
       await prefs.setString('user_no_hp', _noHpController.text);
       await prefs.setString('user_alamat', _alamatController.text);
 
+      // Tampilkan snackbar
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Profil berhasil diperbarui")),
       );
+
+      // Kembali ke halaman sebelumnya (AccountPage) dan refresh
+      Navigator.pop(context, true); // kirim sinyal ke halaman sebelumnya
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Gagal memperbarui profil")),
+        SnackBar(content: Text("Gagal memperbarui profil: ${response.body}")),
       );
     }
   }
@@ -80,7 +97,7 @@ class _SettingsPageState extends State<SettingsPage> {
           "Pengaturan",
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.normal),
         ),
-        backgroundColor: const Color(0xFF67C4A7),
+        backgroundColor: const Color(0xFF016A63),
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
@@ -153,7 +170,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 child: ElevatedButton(
                   onPressed: _saveChanges,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF67C4A7),
+                    backgroundColor: const Color(0xFF016A63),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(4),
                     ),

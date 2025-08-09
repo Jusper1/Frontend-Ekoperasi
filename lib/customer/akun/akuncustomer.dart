@@ -1,7 +1,8 @@
-// import 'package:ekoperasi/customer/akun/SettingsPage.dart';
+import 'package:ekoperasi/customer/akun/SettingsPage.dart';
 import 'package:flutter/material.dart';
 import 'package:ekoperasi/service/auth_service.dart';
 import 'package:ekoperasi/login.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 // ignore: use_key_in_widget_constructors
 class AccountPage extends StatefulWidget {
@@ -24,6 +25,14 @@ class _AccountPageState extends State<AccountPage> {
   Future<void> _loadUserData() async {
     final userData = await _authService.fetchUserData();
     if (userData != null) {
+      SharedPreferences prefs =
+          await SharedPreferences.getInstance(); // tambahkan ini
+
+      await prefs.setString('user_name', userData['name'] ?? '');
+      await prefs.setString('user_email', userData['email'] ?? '');
+      await prefs.setString('user_no_hp', userData['no_hp'] ?? '');
+      await prefs.setString('user_alamat', userData['alamat'] ?? '');
+
       setState(() {
         userName = userData['name'];
         userEmail = userData['email'];
@@ -87,23 +96,31 @@ class _AccountPageState extends State<AccountPage> {
               style: const TextStyle(fontSize: 16, color: Colors.grey),
             ),
             const Divider(height: 30, thickness: 1),
-            // ListTile(
-            //   leading: const Icon(Icons.settings),
-            //   title: const Text("Pengaturan"),
-            //   subtitle: const Text("Ubah data akun Anda"),
-            //   trailing: const Icon(Icons.arrow_forward_ios),
-            //   onTap: () {
-            //     Navigator.push(
-            //       context,
-            //       MaterialPageRoute(
-            //         builder: (context) => SettingsPage(
-            //           name: userName ?? '',
-            //           email: userEmail ?? '',
-            //         ),
-            //       ),
-            //     );
-            //   },
-            // ),
+            ListTile(
+              leading: const Icon(Icons.settings),
+              title: const Text("Pengaturan"),
+              subtitle: const Text("Ubah data akun Anda"),
+              trailing: const Icon(Icons.arrow_forward_ios),
+              onTap: () async {
+                final prefs = await SharedPreferences.getInstance();
+                final result = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => SettingsPage(
+                      name: prefs.getString('user_name') ?? '',
+                      email: prefs.getString('user_email') ?? '',
+                      noHp: prefs.getString('user_no_hp') ?? '',
+                      alamat: prefs.getString('user_alamat') ?? '',
+                    ),
+                  ),
+                );
+
+                // Jika result == true, refresh ulang data profil
+                if (result == true) {
+                  _loadUserData();
+                }
+              },
+            ),
             ListTile(
               leading: const Icon(Icons.exit_to_app),
               title: const Text("Logout"),

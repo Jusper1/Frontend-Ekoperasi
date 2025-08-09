@@ -54,9 +54,11 @@ class _LoginPageState extends State<LoginPage> {
           SharedPreferences prefs = await SharedPreferences.getInstance();
           await prefs.setString('access_token', data['access_token']);
           await prefs.setInt('user_id', data['user']['id']);
-          await prefs.setString('role', data['user']['role']); // Simpan role
-          await prefs.setString(
-              'name', data['user']['name']); // Simpan nama pengguna
+          await prefs.setString('role', data['user']['role']);
+          await prefs.setString('name', data['user']['name']);
+          await prefs.setString('email', data['user']['email']);
+          await prefs.setString('no_hp', data['user']['no_hp'] ?? '');
+          await prefs.setString('alamat', data['user']['alamat'] ?? '');
 
           // Navigasi berdasarkan role
           String role = data['user']['role'];

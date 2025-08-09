@@ -1,4 +1,7 @@
 import 'package:ekoperasi/customer/akun/SettingsPage.dart';
+import 'package:ekoperasi/customer/credit/CreditListPage.dart';
+import 'package:ekoperasi/customer/homepage.dart';
+import 'package:ekoperasi/customer/pesanan/riwayat.dart';
 import 'package:flutter/material.dart';
 import 'package:ekoperasi/service/auth_service.dart';
 import 'package:ekoperasi/login.dart';
@@ -15,6 +18,7 @@ class _AccountPageState extends State<AccountPage> {
   final AuthService _authService = AuthService();
   String? userName = "User";
   String? userEmail = "user@example.com";
+  int _selectedIndex = 3;
 
   @override
   void initState() {
@@ -72,17 +76,50 @@ class _AccountPageState extends State<AccountPage> {
     }
   }
 
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+
+    switch (index) {
+      case 0:
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const HomePage(userName: 'NamaUser'),
+          ),
+          (route) => false,
+        );
+        break;
+      case 1:
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => const RiwayatPage()),
+          (route) => false,
+        );
+        break;
+      case 2:
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => const CreditListPage()),
+          (route) => false,
+        );
+        break;
+      case 3:
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: const Text(
+          "Akun Saya",
+          style: TextStyle(
+              color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
+        ),
         backgroundColor: const Color(0xFF016A63),
-        title: const Text("Akun Saya",
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.normal)),
-        // leading: IconButton(  // HAPUS BAGIAN INI
-        //   icon: const Icon(Icons.arrow_back),
-        //   onPressed: () => Navigator.pop(context),
-        // ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -130,6 +167,18 @@ class _AccountPageState extends State<AccountPage> {
             ),
           ],
         ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Beranda'),
+          BottomNavigationBarItem(icon: Icon(Icons.history), label: 'Riwayat'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.credit_card), label: 'Credit'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Akun'),
+        ],
       ),
     );
   }

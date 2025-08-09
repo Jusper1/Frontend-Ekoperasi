@@ -1,5 +1,7 @@
 // ignore_for_file: avoid_print, use_super_parameters, use_build_context_synchronously
 
+import 'package:ekoperasi/customer/akun/akuncustomer.dart';
+import 'package:ekoperasi/customer/credit/CreditListPage.dart';
 import 'package:ekoperasi/customer/homepage.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -19,6 +21,7 @@ class _RiwayatPageState extends State<RiwayatPage>
   String? token;
   String? userId; // Menyimpan user_id
   bool isLoadingOrders = true;
+  int _selectedIndex = 1;
   late TabController _tabController;
 
   @override
@@ -226,24 +229,49 @@ class _RiwayatPageState extends State<RiwayatPage>
     );
   }
 
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+
+    switch (index) {
+      case 0:
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (context) => HomePage(userName: 'NamaUser'),
+          ),
+          (route) => false,
+        );
+        break;
+      case 1:
+        break;
+      case 2:
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => const CreditListPage()),
+          (route) => false,
+        );
+        break;
+      case 3:
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => AccountPage()),
+          (route) => false,
+        );
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const HomePage(userName: 'NamaUser'),
-              ),
-              (route) => false,
-            );
-          },
+        title: const Text(
+          "Riwayat Pesanan",
+          style: TextStyle(
+              color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
         ),
-        title: const Text('Riwayat Pesanan',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.normal)),
         backgroundColor: const Color(0xFF016A63),
       ),
       body: isLoadingOrders
@@ -253,13 +281,12 @@ class _RiwayatPageState extends State<RiwayatPage>
                 TabBar(
                   controller: _tabController,
                   labelStyle: const TextStyle(
-                    fontSize: 12, // Ukuran font kecil
-                    fontWeight: FontWeight.normal, // Tidak bold
+                    fontSize: 12,
+                    fontWeight: FontWeight.normal,
                   ),
                   unselectedLabelStyle: const TextStyle(
-                    fontSize:
-                        12, // Ukuran font kecil untuk tab yang tidak dipilih
-                    fontWeight: FontWeight.normal, // Tidak bold
+                    fontSize: 12,
+                    fontWeight: FontWeight.normal,
                   ),
                   tabs: const [
                     Tab(text: 'Pending'),
@@ -305,6 +332,18 @@ class _RiwayatPageState extends State<RiwayatPage>
                 ),
               ],
             ),
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Beranda'),
+          BottomNavigationBarItem(icon: Icon(Icons.history), label: 'Riwayat'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.credit_card), label: 'Credit'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Akun'),
+        ],
+      ),
     );
   }
 }

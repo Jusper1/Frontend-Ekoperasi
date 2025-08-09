@@ -1,5 +1,7 @@
+import 'package:ekoperasi/customer/akun/akuncustomer.dart';
 import 'package:ekoperasi/customer/credit/CreditDetailPage.dart';
 import 'package:ekoperasi/customer/homepage.dart';
+import 'package:ekoperasi/customer/pesanan/riwayat.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -14,6 +16,7 @@ class CreditListPage extends StatefulWidget {
 
 class _CreditListPageState extends State<CreditListPage> {
   Future<List<dynamic>>? _creditFuture;
+  int _selectedIndex = 2;
 
   Future<String?> getToken() async {
     final prefs = await SharedPreferences.getInstance();
@@ -73,23 +76,49 @@ class _CreditListPageState extends State<CreditListPage> {
     }
   }
 
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+
+    switch (index) {
+      case 0:
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (context) => HomePage(userName: 'NamaUser'),
+          ),
+          (route) => false,
+        );
+        break;
+      case 1:
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => const RiwayatPage()),
+          (route) => false,
+        );
+        break;
+      case 2:
+        break;
+      case 3:
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => AccountPage()),
+          (route) => false,
+        );
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const HomePage(userName: 'NamaUser'),
-              ),
-              (route) => false,
-            );
-          },
+        title: const Text(
+          "Kredit Saya",
+          style: TextStyle(
+              color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
         ),
-        title: const Text('Kredit Saya'),
         backgroundColor: const Color(0xFF016A63),
         foregroundColor: Colors.white,
         elevation: 0,
@@ -167,6 +196,18 @@ class _CreditListPageState extends State<CreditListPage> {
                 return const Center(child: CircularProgressIndicator());
               },
             ),
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Beranda'),
+          BottomNavigationBarItem(icon: Icon(Icons.history), label: 'Riwayat'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.credit_card), label: 'Credit'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Akun'),
+        ],
+      ),
     );
   }
 }

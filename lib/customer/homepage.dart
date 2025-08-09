@@ -174,27 +174,24 @@ class _HomePageState extends State<HomePage> {
       case 0:
         break;
       case 1:
-        Navigator.push(
+        Navigator.pushAndRemoveUntil(
           context,
-          MaterialPageRoute(builder: (context) => const CartPage()),
+          MaterialPageRoute(builder: (context) => const RiwayatPage()),
+          (route) => false,
         );
         break;
       case 2:
-        Navigator.push(
+        Navigator.pushAndRemoveUntil(
           context,
-          MaterialPageRoute(builder: (context) => const RiwayatPage()),
+          MaterialPageRoute(builder: (context) => const CreditListPage()),
+          (route) => false,
         );
         break;
       case 3:
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const CreditListPage()),
-        );
-        break;
-      case 4:
-        Navigator.push(
+        Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (context) => AccountPage()),
+          (route) => false,
         );
         break;
     }
@@ -324,25 +321,25 @@ class _HomePageState extends State<HomePage> {
         title: const Text(
           "E-Koperasi",
           style: TextStyle(
-              color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
+              color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
         ),
-        //actions: [
-        // IconButton(
-        //   onPressed: () {
-        //     Navigator.push(
-        //       context,
-        //       MaterialPageRoute(
-        //         builder: (context) => const CartPage(),
-        //       ),
-        //     );
-        //   },
-        //   icon: const Icon(Icons.shopping_cart, color: Colors.black),
-        // ),
-        // IconButton(
-        //   onPressed: () {},
-        //   icon: const Icon(Icons.notifications, color: Colors.black),
-        // ),
-        //],
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const CartPage(),
+                ),
+              );
+            },
+            icon: const Icon(Icons.shopping_cart, color: Colors.white),
+          ),
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.notifications, color: Colors.white),
+          ),
+        ],
       ),
       body: isLoading
           ? const Center(
@@ -572,8 +569,6 @@ class _HomePageState extends State<HomePage> {
         onTap: _onItemTapped,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Beranda'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.shopping_cart), label: 'Keranjang'),
           BottomNavigationBarItem(icon: Icon(Icons.history), label: 'Riwayat'),
           BottomNavigationBarItem(
               icon: Icon(Icons.credit_card), label: 'Credit'),

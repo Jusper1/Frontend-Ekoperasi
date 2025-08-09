@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:ekoperasi/customer/akun/akuncustomer.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -43,7 +44,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
   Future<void> _saveChanges() async {
     final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString('access_token'); // gunakan key yang benar
+    final token = prefs.getString('access_token');
 
     if (token == null) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -69,19 +70,22 @@ class _SettingsPageState extends State<SettingsPage> {
     );
 
     if (response.statusCode == 200) {
-      // Simpan ke SharedPreferences
+      // Simpan data user ke SharedPreferences
       await prefs.setString('user_name', _nameController.text);
       await prefs.setString('user_email', _emailController.text);
       await prefs.setString('user_no_hp', _noHpController.text);
       await prefs.setString('user_alamat', _alamatController.text);
+      await prefs.setBool('is_profile_complete', true); // tandai profil lengkap
 
-      // Tampilkan snackbar
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Profil berhasil diperbarui")),
       );
 
-      // Kembali ke halaman sebelumnya (AccountPage) dan refresh
-      Navigator.pop(context, true); // kirim sinyal ke halaman sebelumnya
+      // Arahkan langsung ke AccountPage
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => AccountPage()),
+      );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Gagal memperbarui profil: ${response.body}")),

@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously, avoid_print
 
+import 'package:ekoperasi/customer/akun/SettingsPage.dart';
 import 'package:flutter/material.dart';
 import 'package:ekoperasi/customer/homepage.dart'; // Import for customer homepage
 import 'package:ekoperasi/admin/homepage2.dart'; // Import for admin homepage
@@ -29,7 +30,6 @@ class _LoginPageState extends State<LoginPage> {
       _errorMessage = '';
     });
 
-    // Check if email and password fields are empty
     if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
       setState(() {
         _isLoading = false;
@@ -60,9 +60,29 @@ class _LoginPageState extends State<LoginPage> {
           await prefs.setString('no_hp', data['user']['no_hp'] ?? '');
           await prefs.setString('alamat', data['user']['alamat'] ?? '');
 
-          // Navigasi berdasarkan role
           String role = data['user']['role'];
           String userName = data['user']['name'];
+
+          // Cek apakah profil lengkap
+          bool isProfileComplete = data['user']['is_profile_complete'] ?? false;
+
+          if (!isProfileComplete) {
+            // Arahkan ke halaman SettingsPage untuk melengkapi profil
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => SettingsPage(
+                  name: data['user']['name'] ?? '',
+                  email: data['user']['email'] ?? '',
+                  noHp: data['user']['no_hp'] ?? '',
+                  alamat: data['user']['alamat'] ?? '',
+                ),
+              ),
+            );
+            return;
+          }
+
+          // Kalau profil lengkap → navigasi sesuai role
           if (role == 'admin') {
             Navigator.pushReplacement(
               context,

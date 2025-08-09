@@ -253,7 +253,7 @@ class _HomePage2State extends State<HomePage2> {
                           const Padding(
                             padding: EdgeInsets.fromLTRB(16, 12, 16, 8),
                             child: Text(
-                              'Jln. Dr.Moh Hatta, Binuang Kp.Dalam',
+                              'Jln. bukittinggi',
                               style: TextStyle(
                                 fontSize: 14, // Adjusted font size
                                 fontWeight: FontWeight.bold,
@@ -283,13 +283,13 @@ class _HomePage2State extends State<HomePage2> {
                               onPressed: () {
                                 // Open WhatsApp
                                 String url =
-                                    "https://wa.me/6281372114967"; // Replace with your WhatsApp number
+                                    "https://wa.me/6285263154625"; // Replace with your WhatsApp number
                                 // ignore: deprecated_member_use
                                 launch(url);
                               },
                               // ignore: sort_child_properties_last
                               child: const Text(
-                                '+6281372114967',
+                                '+6285263154625',
                                 style: TextStyle(color: Colors.white),
                               ),
                               style: ElevatedButton.styleFrom(

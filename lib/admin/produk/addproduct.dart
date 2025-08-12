@@ -120,7 +120,7 @@ class _AddProductState extends State<AddProduct> {
           'Tambah Produk',
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.normal),
         ),
-        backgroundColor: const Color(0xFF67C4A7),
+        backgroundColor: const Color(0xFF016A63),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -333,7 +333,7 @@ class _AddProductState extends State<AddProduct> {
                         color: Colors.white), // Set font color to white
                   ),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF67C4A7), // Button color
+                    backgroundColor: const Color(0xFF016A63), // Button color
                     padding: const EdgeInsets.symmetric(
                         horizontal: 60,
                         vertical:

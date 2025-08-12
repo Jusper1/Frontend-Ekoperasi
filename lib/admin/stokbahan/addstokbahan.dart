@@ -92,7 +92,7 @@ class _AddStokBahanState extends State<AddStokBahan> {
         ),
         title: const Text('Tambah Stok Bahan',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.normal)),
-        backgroundColor: const Color(0xFF67C4A7),
+        backgroundColor: const Color(0xFF016A63),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -236,7 +236,7 @@ class _AddStokBahanState extends State<AddStokBahan> {
                     style: TextStyle(color: Colors.white),
                   ),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF67C4A7), // Button color
+                    backgroundColor: const Color(0xFF016A63), // Button color
                     padding: const EdgeInsets.symmetric(
                         horizontal: 60,
                         vertical:

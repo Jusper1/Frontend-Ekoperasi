@@ -3,6 +3,8 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:ekoperasi/admin/akun/akuncustomer.dart';
+import 'package:ekoperasi/admin/credit/admincredit.dart';
 import 'package:flutter/material.dart';
 import 'package:ekoperasi/admin/keuangan/manajemenkeuangan.dart';
 import 'package:ekoperasi/admin/pengguna/listpengguna.dart';
@@ -10,7 +12,6 @@ import 'package:ekoperasi/admin/pesanan/riwayatpesanan.dart';
 import 'package:ekoperasi/admin/produk/listproduct.dart';
 import 'package:ekoperasi/admin/stokbahan/liststokbahan.dart';
 import 'package:ekoperasi/admin/pesanan/listpesanan.dart';
-import 'package:ekoperasi/customer/akun/akuncustomer.dart';
 import 'package:ekoperasi/service/api_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -74,16 +75,22 @@ class _HomePage2State extends State<HomePage2> {
       case 0:
         break;
       case 1:
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => const ListPesananPage()));
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => const ListPesananPage()),
+            (route) => false);
         break;
       case 2:
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => const RiwayatPage()));
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => const RiwayatPage()),
+            (route) => false);
         break;
       case 3:
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => AccountPage()));
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => AccountPage1()),
+            (route) => false);
         break;
     }
   }
@@ -133,7 +140,7 @@ class _HomePage2State extends State<HomePage2> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: const Color(0xFF67C4A7),
+        backgroundColor: const Color(0xFF016A63),
         title: const Text("E-Koperasi",
             style: TextStyle(
                 color: Colors.black,
@@ -348,6 +355,12 @@ class _HomePage2State extends State<HomePage2> {
                       MaterialPageRoute(builder: (context) => ListStokBahan()),
                     );
                   }),
+                  _buildCategoryCard(Icons.credit_card, 'Credit', () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => AdminCredit()),
+                    );
+                  }),
                   _buildCategoryCard(Icons.person_search, 'Pengguna', () {
                     Navigator.push(
                       context,
@@ -406,7 +419,7 @@ class _HomePage2State extends State<HomePage2> {
                               'Customer',
                               stats['totalCustomer'].toString(),
                               Icons.people,
-                              const Color(0xFF66BB6A), // Hijau
+                              const Color(0xFF66BB6A),
                             ),
                           ],
                         ),
@@ -488,7 +501,6 @@ Widget _buildStatCard(String title, String count, IconData icon, Color color) {
   );
 }
 
-// Fungsi untuk membuat kategori dengan ikon bulat
 Widget _buildCategoryCard(IconData icon, String title, Function onTap) {
   return GestureDetector(
     onTap: () => onTap(),
@@ -496,21 +508,20 @@ Widget _buildCategoryCard(IconData icon, String title, Function onTap) {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Container(
-          padding: const EdgeInsets.all(16), // Padding lebih besar untuk ikon
+          padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-            color: Colors.blue.withOpacity(0.2), // Soft color untuk ikon
-            shape: BoxShape.circle, // Bentuk lingkaran
+            color: Colors.blue.withOpacity(0.2),
+            shape: BoxShape.circle,
           ),
-          child: Icon(icon,
-              size: 32, color: Colors.black), // Ukuran ikon lebih besar
+          child: Icon(icon, size: 28, color: Colors.black),
         ),
-        const SizedBox(height: 12), // Spasi antara ikon dan teks
+        const SizedBox(height: 8),
         Text(
           title,
           style: const TextStyle(
-            fontSize: 14, // Ukuran teks lebih kecil
+            fontSize: 14,
             fontWeight: FontWeight.w500,
-            color: Colors.black87, // Warna teks lebih lembut
+            color: Colors.black87,
           ),
         ),
       ],

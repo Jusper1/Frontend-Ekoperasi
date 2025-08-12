@@ -30,6 +30,7 @@ class _LoginPageState extends State<LoginPage> {
       _errorMessage = '';
     });
 
+    // Validasi form
     if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
       setState(() {
         _isLoading = false;
@@ -41,6 +42,9 @@ class _LoginPageState extends State<LoginPage> {
     try {
       var response = await http.post(
         Uri.parse('http://192.168.43.202:8000/api/login'),
+        headers: {
+          'Accept': 'application/json',
+        },
         body: {
           'email': _emailController.text,
           'password': _passwordController.text,
@@ -48,9 +52,18 @@ class _LoginPageState extends State<LoginPage> {
       );
 
       if (response.statusCode == 200) {
-        var data = json.decode(response.body);
+        // Pastikan responsenya JSON valid
+        Map<String, dynamic> data;
+        try {
+          data = json.decode(response.body);
+        } catch (e) {
+          setState(() {
+            _errorMessage = 'Format data dari server tidak valid.';
+          });
+          return;
+        }
 
-        if (data['access_token'] != null) {
+        if (data.containsKey('access_token') && data['access_token'] != null) {
           SharedPreferences prefs = await SharedPreferences.getInstance();
           await prefs.setString('access_token', data['access_token']);
           await prefs.setInt('user_id', data['user']['id']);
@@ -63,11 +76,10 @@ class _LoginPageState extends State<LoginPage> {
           String role = data['user']['role'];
           String userName = data['user']['name'];
 
-          // Cek apakah profil lengkap
           bool isProfileComplete = data['user']['is_profile_complete'] ?? false;
 
+          // Jika profil belum lengkap → arahkan ke SettingsPage
           if (!isProfileComplete) {
-            // Arahkan ke halaman SettingsPage untuk melengkapi profil
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
@@ -82,7 +94,7 @@ class _LoginPageState extends State<LoginPage> {
             return;
           }
 
-          // Kalau profil lengkap → navigasi sesuai role
+          // Navigasi sesuai role
           if (role == 'admin') {
             Navigator.pushReplacement(
               context,
@@ -104,9 +116,18 @@ class _LoginPageState extends State<LoginPage> {
           });
         }
       } else {
-        setState(() {
-          _errorMessage = 'Email atau password salah, silakan coba lagi.';
-        });
+        // Jika status selain 200
+        try {
+          var errorData = json.decode(response.body);
+          setState(() {
+            _errorMessage = errorData['message'] ??
+                'Email atau password salah, silakan coba lagi.';
+          });
+        } catch (e) {
+          setState(() {
+            _errorMessage = 'Gagal login, periksa email dan password.';
+          });
+        }
       }
     } catch (e) {
       setState(() {

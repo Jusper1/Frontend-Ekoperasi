@@ -114,7 +114,7 @@ class _ManajemenKeuanganState extends State<ManajemenKeuangan> {
             tooltip: 'Unduh PDF',
           ),
         ],
-        backgroundColor: const Color(0xFF67C4A7),
+        backgroundColor: const Color(0xFF016A63),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 80.0),
@@ -219,7 +219,7 @@ class _ManajemenKeuanganState extends State<ManajemenKeuangan> {
             MaterialPageRoute(builder: (context) => UnexpectedExpenseScreen()),
           );
         },
-        backgroundColor: const Color(0xFF67C4A7),
+        backgroundColor: const Color(0xFF016A63),
         // ignore: sort_child_properties_last
         child: const Icon(Icons.add),
         tooltip: "Tambah Biaya Tidak Terduga",

@@ -194,7 +194,7 @@ class _ListStokBahanState extends State<ListStokBahan> {
             tooltip: 'Unduh PDF',
           ),
         ],
-        backgroundColor: const Color(0xFF67C4A7),
+        backgroundColor: const Color(0xFF016A63),
         automaticallyImplyLeading: false,
         leading: IconButton(
             icon: const Icon(Icons.arrow_back, color: Colors.black),
@@ -295,7 +295,7 @@ class _ListStokBahanState extends State<ListStokBahan> {
             MaterialPageRoute(builder: (context) => const AddStokBahan()),
           );
         },
-        backgroundColor: const Color(0xFF67C4A7),
+        backgroundColor: const Color(0xFF016A63),
         child: const Icon(Icons.add),
       ),
     );

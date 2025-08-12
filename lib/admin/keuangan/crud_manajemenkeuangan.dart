@@ -106,7 +106,7 @@ class _UnexpectedExpenseScreenState extends State<UnexpectedExpenseScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xFF67C4A7),
+        backgroundColor: const Color(0xFF016A63),
         title: const Text(
           'Biaya Tidak Terduga',
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.normal),
@@ -231,7 +231,7 @@ class _UnexpectedExpenseScreenState extends State<UnexpectedExpenseScreen> {
                         onPressed: _addUnexpectedExpense,
                         style: ElevatedButton.styleFrom(
                           backgroundColor:
-                              const Color(0xFF67C4A7), // Button color
+                              const Color(0xFF016A63), // Button color
                           padding: const EdgeInsets.symmetric(
                             horizontal: 60,
                             vertical:

@@ -59,6 +59,34 @@ class _ListPenggunaState extends State<ListPengguna>
     }
   }
 
+  Future<void> _toggleAccountStatus(int userId, bool activate) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('access_token');
+
+    if (token == null) return;
+
+    final response = await http.patch(
+      // pakai PATCH
+      Uri.parse('http://192.168.43.202:8000/api/users/$userId/toggle-status'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: json.encode({
+        'is_active': activate ? 1 : 0, // 1 aktif, 0 nonaktif
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      fetchData(); // refresh daftar pengguna
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Status akun berhasil diperbarui')),
+      );
+    } else {
+      print('Gagal update status: ${response.statusCode} ${response.body}');
+    }
+  }
+
   @override
   void dispose() {
     _tabController.dispose();
@@ -75,7 +103,7 @@ class _ListPenggunaState extends State<ListPengguna>
             'Pengguna',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.normal),
           ),
-          backgroundColor: const Color(0xFF67C4A7),
+          backgroundColor: const Color(0xFF016A63),
         ),
       ),
       body: Column(
@@ -176,6 +204,29 @@ class _ListPenggunaState extends State<ListPengguna>
                             : Colors.teal.shade400,
                         fontSize: 14,
                         fontWeight: FontWeight.normal)),
+                const SizedBox(height: 8),
+                // Tombol Aktif/Nonaktif
+                ElevatedButton(
+                  onPressed: () {
+                    final currentStatus = users[index]['is_active'] == 1;
+                    final newStatus = !currentStatus;
+                    _toggleAccountStatus(users[index]['id'], newStatus);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: (users[index]['is_active'] == 1)
+                        ? Colors.green
+                        : Colors.red,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  ),
+                  child: Text(
+                    (users[index]['is_active'] == 1) ? 'Aktif' : 'Nonaktif',
+                    style: const TextStyle(fontSize: 12, color: Colors.white),
+                  ),
+                )
               ],
             ),
           ),
@@ -190,7 +241,7 @@ void main() {
     home: ListPengguna(),
     theme: ThemeData(
       fontFamily: 'Poppins',
-      primaryColor: const Color(0xFF67C4A7),
+      primaryColor: const Color(0xFF016A63),
     ),
   ));
 }

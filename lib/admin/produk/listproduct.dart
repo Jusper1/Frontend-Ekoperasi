@@ -373,7 +373,7 @@ class _ListProductState extends State<ListProduct> {
             }),
         title: const Text('Produk',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.normal)),
-        backgroundColor: const Color(0xFF67C6A3),
+        backgroundColor: const Color(0xFF016A63),
       ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -390,7 +390,7 @@ class _ListProductState extends State<ListProduct> {
         tooltip: 'Tambah Produk',
         // ignore: sort_child_properties_last
         child: const Icon(Icons.add),
-        backgroundColor: const Color(0xFF67C6A3),
+        backgroundColor: const Color(0xFF016A63),
       ),
     );
   }

@@ -1,5 +1,8 @@
 // ignore_for_file: use_super_parameters, avoid_print
 
+import 'package:ekoperasi/admin/akun/akuncustomer.dart';
+import 'package:ekoperasi/admin/homepage2.dart';
+import 'package:ekoperasi/admin/pesanan/listpesanan.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -18,6 +21,7 @@ class _RiwayatPageState extends State<RiwayatPage> {
   bool isLoadingOrders = true;
   String? token;
   String searchQuery = '';
+  int _selectedIndex = 2;
 
   @override
   void initState() {
@@ -77,6 +81,36 @@ class _RiwayatPageState extends State<RiwayatPage> {
     }
   }
 
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+
+    switch (index) {
+      case 0:
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+                builder: (context) => const HomePage2(userName: 'NamaUser')),
+            (route) => false);
+        break;
+      case 1:
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => const ListPesananPage()),
+            (route) => false);
+        break;
+      case 2:
+        break;
+      case 3:
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => AccountPage1()),
+            (route) => false);
+        break;
+    }
+  }
+
   List filterOrders(String query) {
     if (query.isEmpty) {
       return orders;
@@ -99,7 +133,7 @@ class _RiwayatPageState extends State<RiwayatPage> {
       appBar: AppBar(
         title: const Text('Riwayat Pesanan',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.normal)),
-        backgroundColor: const Color(0xFF67C4A7),
+        backgroundColor: const Color(0xFF016A63),
         actions: [
           IconButton(
             icon: const Icon(Icons.search, size: 30),
@@ -113,6 +147,19 @@ class _RiwayatPageState extends State<RiwayatPage> {
       body: isLoadingOrders
           ? const Center(child: CircularProgressIndicator())
           : OrderList(orders: filterOrders(searchQuery)),
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Beranda'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.shopping_cart_checkout_outlined),
+              label: 'Pesanan'),
+          BottomNavigationBarItem(icon: Icon(Icons.history), label: 'Riwayat'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Akun'),
+        ],
+      ),
     );
   }
 }

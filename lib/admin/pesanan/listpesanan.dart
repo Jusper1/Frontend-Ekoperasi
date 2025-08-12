@@ -1,5 +1,8 @@
 // ignore_for_file: use_super_parameters, avoid_print, use_build_context_synchronously
 
+import 'package:ekoperasi/admin/akun/akuncustomer.dart';
+import 'package:ekoperasi/admin/homepage2.dart';
+import 'package:ekoperasi/admin/pesanan/riwayatpesanan.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -18,6 +21,7 @@ class _ListPesananPageState extends State<ListPesananPage>
   bool isLoadingOrders = true;
   String? token;
   late TabController _tabController;
+  int _selectedIndex = 1;
 
   @override
   void initState() {
@@ -220,6 +224,38 @@ class _ListPesananPageState extends State<ListPesananPage>
     }
   }
 
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+
+    switch (index) {
+      case 0:
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (context) => HomePage2(userName: 'NamaUser'),
+          ),
+          (route) => false,
+        );
+        break;
+      case 1:
+        break;
+      case 2:
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => const RiwayatPage()),
+            (route) => false);
+        break;
+      case 3:
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => AccountPage1()),
+            (route) => false);
+        break;
+    }
+  }
+
   List filterOrdersByStatus(String status) {
     return orders.where((order) => order['status'] == status).toList();
   }
@@ -230,7 +266,7 @@ class _ListPesananPageState extends State<ListPesananPage>
       appBar: AppBar(
         title: const Text('Daftar Pesanan',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.normal)),
-        backgroundColor: const Color(0xFF67C4A7),
+        backgroundColor: const Color(0xFF016A63),
       ),
       body: isLoadingOrders
           ? const Center(child: CircularProgressIndicator())
@@ -291,6 +327,19 @@ class _ListPesananPageState extends State<ListPesananPage>
                 ),
               ],
             ),
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Beranda'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.shopping_cart_checkout_outlined),
+              label: 'Pesanan'),
+          BottomNavigationBarItem(icon: Icon(Icons.history), label: 'Riwayat'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Akun'),
+        ],
+      ),
     );
   }
 }
@@ -411,7 +460,7 @@ class OrderList extends StatelessWidget {
                                 ElevatedButton(
                                   onPressed: () => onComplete!(order['id']),
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: const Color(0xFF67C4A7),
+                                    backgroundColor: const Color(0xFF016A63),
                                     foregroundColor: Colors.white,
                                   ),
                                   child: const Text('Selesai'),
@@ -457,7 +506,7 @@ class OrderDetailPage extends StatelessWidget {
           'Detail Pesanan',
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.normal),
         ),
-        backgroundColor: const Color(0xFF67C4A7),
+        backgroundColor: const Color(0xFF016A63),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),

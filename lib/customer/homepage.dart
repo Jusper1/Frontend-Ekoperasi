@@ -137,6 +137,8 @@ class _HomePageState extends State<HomePage> {
                 'name': product['name'],
                 'price': double.parse(product['price']).toStringAsFixed(0),
                 'description': product['description'],
+                'stock_quantity':
+                    int.tryParse(product['stock_quantity'].toString()) ?? 0,
               };
             }).toList();
             filteredProducts = products; // Initialize filteredProducts
@@ -209,8 +211,8 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  Widget _buildProductCard(
-      int id, String image_url, String name, String price, String description) {
+  Widget _buildProductCard(int id, String image_url, String name, String price,
+      String description, int stok) {
     final formatter = NumberFormat('#,###', 'id_ID');
     final formattedPrice = formatter.format(int.tryParse(price) ?? 0);
 
@@ -225,6 +227,7 @@ class _HomePageState extends State<HomePage> {
               name: name,
               price: price,
               description: description, // Atau ganti dengan data yang sesuai
+              stock_quantity: stok,
             ),
           ),
         );
@@ -270,9 +273,12 @@ class _HomePageState extends State<HomePage> {
                   Text(
                     name,
                     style: const TextStyle(
-                        fontSize: 14, fontWeight: FontWeight.normal),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+                      fontSize: 14,
+                      fontWeight: FontWeight.normal,
+                    ),
+                    softWrap: true, // Izinkan pindah baris
+                    maxLines: 2, // Atur jumlah baris maksimal (bisa lebih)
+                    overflow: TextOverflow.visible, // Teks akan tampil penuh
                   ),
                   const SizedBox(height: 4),
                   Text(
@@ -282,6 +288,16 @@ class _HomePageState extends State<HomePage> {
                         fontWeight: FontWeight.bold,
                         color: Colors.red),
                   ),
+                  Text('Stok: $stok',
+                      style: const TextStyle(fontSize: 12, color: Colors.grey)),
+                  const SizedBox(height: 4),
+                  // Text(
+                  //   description,
+                  //   style: const TextStyle(
+                  //       fontSize: 12, color: Colors.grey, height: 1.5),
+                  //   maxLines: 2,
+                  //   overflow: TextOverflow.ellipsis,
+                  // ),
                 ],
               ),
             ),
@@ -550,12 +566,14 @@ class _HomePageState extends State<HomePage> {
                           itemCount: filteredProducts.length,
                           itemBuilder: (context, index) {
                             final product = filteredProducts[index];
+                            final stok = product['stock_quantity'] ?? 0;
                             return _buildProductCard(
                               product['id'],
                               product['image_url'],
                               product['name'],
                               product['price'],
                               product['description'],
+                              stok,
                             );
                           },
                         ),

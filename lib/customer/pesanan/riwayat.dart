@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:intl/intl.dart';
 
 class RiwayatPage extends StatefulWidget {
   const RiwayatPage({Key? key}) : super(key: key);
@@ -481,6 +482,18 @@ class OrderDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double totalPrice =
+        double.tryParse(orderDetails['total_price'].toString()) ?? 0;
+    double totalBarang = 0;
+
+    for (var item in orderItems) {
+      double harga = double.tryParse(item['price'].toString()) ?? 0;
+      int qty = int.tryParse(item['quantity'].toString()) ?? 0;
+      totalBarang += harga * qty;
+    }
+
+    double ongkir = totalPrice - totalBarang;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -603,18 +616,45 @@ class OrderDetailPage extends StatelessWidget {
                 ),
               ],
             ),
+            const SizedBox(height: 8),
+
+// Ongkir hanya tampil jika metode pengiriman "Diantar"
+            if (orderDetails['delivery_method'] == 'Diantar')
+              Row(
+                children: [
+                  const Icon(Icons.local_shipping, color: Colors.orange),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Row(
+                      children: [
+                        const Text(
+                          'Ongkir: ',
+                          style: TextStyle(fontSize: 14, color: Colors.black),
+                        ),
+                        Text(
+                          'Rp ${NumberFormat('#,###', 'id_ID').format(ongkir)}',
+                          style: const TextStyle(
+                              fontSize: 14, color: Colors.black),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             const SizedBox(height: 10),
 
             // Alamat Pengiriman
             Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Icon(Icons.location_on, color: Colors.red),
                 const SizedBox(width: 8),
                 Expanded(
-                  child: Row(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text(
-                        'Alamat: ',
+                        'Alamat:',
                         style: TextStyle(fontSize: 14, color: Colors.black),
                       ),
                       Text(

@@ -1,5 +1,3 @@
-// ignore_for_file: use_build_context_synchronously, non_constant_identifier_names
-
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -8,20 +6,21 @@ import 'package:ekoperasi/customer/produk/pembayaran.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DetailProduct extends StatefulWidget {
-  final int id; // Menambahkan id produk
-  final String image_url; // Menggunakan camelCase untuk konsistensi
+  final int id;
+  final String image_url;
   final String name;
   final String price;
   final String description;
+  final int stock_quantity;
 
-  // ignore: use_super_parameters
   const DetailProduct({
     Key? key,
-    required this.id, // Tambahkan id ke parameter
+    required this.id,
     required this.image_url,
     required this.name,
     required this.price,
     required this.description,
+    required this.stock_quantity,
   }) : super(key: key);
 
   @override
@@ -29,8 +28,7 @@ class DetailProduct extends StatefulWidget {
 }
 
 class _DetailProductState extends State<DetailProduct> {
-  //bool _isFavorite = false;
-  int _quantity = 1; // Inisialisasi jumlah dengan 1
+  int _quantity = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -42,17 +40,14 @@ class _DetailProductState extends State<DetailProduct> {
         elevation: 0,
         backgroundColor: const Color(0xFF016A63),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () {
-            Navigator.pop(context); // Kembali ke halaman sebelumnya
-          },
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => Navigator.pop(context),
         ),
         title: const Text(
           'Detail Produk',
           style: TextStyle(
-            color: Colors.black,
+            color: Colors.white,
             fontSize: 18,
-            fontWeight: FontWeight.normal,
           ),
         ),
       ),
@@ -60,65 +55,69 @@ class _DetailProductState extends State<DetailProduct> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Bagian Gambar
-            Container(
-              height: 300,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: NetworkImage(
-                      widget.image_url), // Gunakan NetworkImage untuk URL
-                  fit: BoxFit.cover,
+            // Gambar Produk
+            AspectRatio(
+              aspectRatio: 1,
+              child: Image.network(
+                widget.image_url,
+                fit: BoxFit.cover,
+              ),
+            ),
+
+            // Nama produk
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Text(
+                widget.name,
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ),
-            // Judul Produk dan Tombol Favorit
+
+            // Harga dan stok
             Padding(
-              padding: const EdgeInsets.all(12),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Expanded(
-                    child: Text(
-                      widget.name,
-                      style: const TextStyle(
-                          fontSize: 18, fontWeight: FontWeight.bold),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  // IconButton(
-                  //   icon: Icon(
-                  //     _isFavorite ? Icons.favorite : Icons.favorite_border,
-                  //     color: _isFavorite ? Colors.red : Colors.grey,
-                  //   ),
-                  //   onPressed: () {
-                  //     setState(() {
-                  //       _isFavorite = !_isFavorite;
-                  //     });
-                  //   },
-                  // ),
-                ],
-              ),
-            ),
-            // Harga dan Jumlah Terjual
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12.0),
-              child: Row(
-                children: [
-                  Text(
-                    'Rp. $formattedPrice',
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.red,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Rp. $formattedPrice',
+                          style: const TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.red,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          'Stok: ${widget.stock_quantity}',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: widget.stock_quantity > 0
+                                ? Colors.grey
+                                : Colors.red,
+                            fontWeight: widget.stock_quantity == 0
+                                ? FontWeight.bold
+                                : FontWeight.normal,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
               ),
             ),
+
             const SizedBox(height: 20),
+
             // Deskripsi Produk
             Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -126,144 +125,171 @@ class _DetailProductState extends State<DetailProduct> {
                     'Deskripsi Produk',
                     style: TextStyle(
                       fontSize: 16,
-                      fontWeight: FontWeight.normal,
-                      color: Colors.grey,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black87,
                     ),
                   ),
                   const SizedBox(height: 8),
                   Text(
                     widget.description,
-                    style: const TextStyle(fontSize: 16, color: Colors.black87),
+                    style: const TextStyle(
+                      fontSize: 14,
+                      color: Colors.black87,
+                    ),
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: 20),
-            // Pemilih Jumlah dan Tombol Tambah ke Keranjang
+
+            const SizedBox(height: 30),
+
+            // Counter + Tombol Aksi
             Padding(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: 8.0), // Kurangi padding
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              child: Column(
                 children: [
-                  Flexible(
-                    flex: 2,
-                    child: Row(
-                      children: [
-                        IconButton(
-                          icon: const Icon(Icons.remove),
-                          onPressed: () {
-                            setState(() {
-                              if (_quantity > 1) {
-                                _quantity--;
-                              }
-                            });
-                          },
+                  Row(
+                    children: [
+                      // Counter
+                      Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey.shade300),
+                          borderRadius: BorderRadius.circular(8),
                         ),
-                        Text(
-                          '$_quantity',
-                          style: const TextStyle(fontSize: 18),
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.add),
-                          onPressed: () {
-                            setState(() {
-                              _quantity++;
-                            });
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    flex: 3,
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        // Fungsi tambah keranjang
-                        final prefs = await SharedPreferences.getInstance();
-                        List<CartItem> cartItems = [];
-                        final cartData = prefs.getString('cartItems');
-
-                        if (cartData != null) {
-                          List<dynamic> jsonList = jsonDecode(cartData);
-                          cartItems = jsonList
-                              .map((item) => CartItem.fromJson(item))
-                              .toList();
-                        }
-
-                        cartItems.add(
-                          CartItem(
-                            image_url: widget.image_url,
-                            name: widget.name,
-                            price: double.parse(widget.price),
-                            quantity: _quantity,
-                            id: widget.id,
-                          ),
-                        );
-
-                        prefs.setString(
-                            'cartItems',
-                            jsonEncode(cartItems
-                                .map((item) => item.toJson())
-                                .toList()));
-
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text(
-                                'Produk berhasil ditambahkan ke keranjang'),
-                          ),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        minimumSize: const Size(120, 48), // Ukuran fleksibel
-                        backgroundColor: const Color(0xFF016A63),
-                      ),
-                      child: const Text(
-                        'Keranjang',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    flex: 3,
-                    child: OutlinedButton(
-                      onPressed: () {
-                        // Fungsi beli sekarang
-                        final totalPrice =
-                            double.parse(widget.price) * _quantity;
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => PembayaranPage(
-                              cartItems: [
-                                CartItem(
-                                  image_url: widget.image_url,
-                                  name: widget.name,
-                                  price: double.parse(widget.price),
-                                  quantity: _quantity,
-                                  id: widget.id,
-                                ),
-                              ],
-                              totalPrice: totalPrice,
+                        child: Row(
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.remove),
+                              onPressed: () {
+                                setState(() {
+                                  if (_quantity > 1) _quantity--;
+                                });
+                              },
                             ),
+                            Text(
+                              '$_quantity',
+                              style: const TextStyle(fontSize: 16),
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.add),
+                              onPressed: () {
+                                setState(() {
+                                  if (_quantity < widget.stock_quantity) {
+                                    _quantity++;
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                          'Maksimal pembelian ${widget.stock_quantity}',
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+
+                      // Tombol Keranjang
+                      Expanded(
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF016A63),
+                            padding: const EdgeInsets.symmetric(vertical: 14),
                           ),
-                        );
-                      },
-                      style: OutlinedButton.styleFrom(
-                        side: const BorderSide(color: Color(0xFFBFBFBF)),
-                        minimumSize: const Size(120, 48), // Ukuran fleksibel
+                          onPressed: widget.stock_quantity == 0
+                              ? null
+                              : () async {
+                                  final prefs =
+                                      await SharedPreferences.getInstance();
+                                  List<CartItem> cartItems = [];
+                                  final cartData = prefs.getString('cartItems');
+
+                                  if (cartData != null) {
+                                    List<dynamic> jsonList =
+                                        jsonDecode(cartData);
+                                    cartItems = jsonList
+                                        .map((item) => CartItem.fromJson(item))
+                                        .toList();
+                                  }
+
+                                  cartItems.add(
+                                    CartItem(
+                                      image_url: widget.image_url,
+                                      name: widget.name,
+                                      price: double.parse(widget.price),
+                                      quantity: _quantity,
+                                      id: widget.id,
+                                    ),
+                                  );
+
+                                  prefs.setString(
+                                    'cartItems',
+                                    jsonEncode(cartItems
+                                        .map((item) => item.toJson())
+                                        .toList()),
+                                  );
+
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text(
+                                          'Produk berhasil ditambahkan ke keranjang'),
+                                    ),
+                                  );
+                                },
+                          child: const Text(
+                            'Keranjang',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
                       ),
-                      child: const Text(
-                        'Beli Sekarang',
-                        style: TextStyle(color: Colors.black87),
+                      const SizedBox(width: 8),
+
+                      // Tombol Beli Sekarang
+                      Expanded(
+                        child: OutlinedButton(
+                          style: OutlinedButton.styleFrom(
+                            side: const BorderSide(color: Color(0xFFBFBFBF)),
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                          ),
+                          onPressed: widget.stock_quantity == 0
+                              ? null
+                              : () {
+                                  final totalPrice =
+                                      double.parse(widget.price) * _quantity;
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => PembayaranPage(
+                                        cartItems: [
+                                          CartItem(
+                                            image_url: widget.image_url,
+                                            name: widget.name,
+                                            price: double.parse(widget.price),
+                                            quantity: _quantity,
+                                            id: widget.id,
+                                            
+                                          ),
+                                        ],
+                                        totalPrice: totalPrice,
+                                      ),
+                                    ),
+                                  );
+                                },
+                          child: const Text(
+                            'Beli Sekarang',
+                            style: TextStyle(color: Colors.black87),
+                          ),
+                        ),
                       ),
-                    ),
+                    ],
                   ),
                 ],
               ),
-            )
+            ),
           ],
         ),
       ),
